@@ -284,8 +284,4 @@ FLASK_ENV=production
 FLASK_DEBUG=0
 ```
 
-Consultez [DEPLOY.md](DEPLOY.md) pour un déploiement en production.
-
----
-
 ## 🔧 API & Technique
