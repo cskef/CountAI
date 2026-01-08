@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CountAI - Analyse de foule par Intelligence Artificielle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Navigation -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="app-logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM6 20a9 9 0 0118 0v-2a9 9 0 00-18 0v2z"></path>
+                    </svg>
+                    <h1 class="app-title">CountAI</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="history-toggle" class="btn-icon" title="Voir l'historique des analyses">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </button>
+                    <button id="help-toggle" class="btn-icon" title="Aide et documentation">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 16v-4M12 8h.01"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <main class="app-main">
+            <!-- Sidebar Historique -->
+            <aside id="history-sidebar" class="history-sidebar">
+                <div class="sidebar-header">
+                    <h2>Historique</h2>
+                    <button id="clear-history" class="btn-text">Effacer</button>
+                </div>
+                <div id="history-list" class="history-list">
+                    <p class="empty-state">Aucune analyse pour le moment</p>
+                </div>
+            </aside>
+
+            <!-- Contenu principal -->
+            <div class="app-content">
+                
+                <!-- État IDLE -->
+                <section id="idle-state" class="state-section active">
+                    <div class="welcome-container">
+                        <div class="welcome-hero">
+                            <h2 class="welcome-title">Comptez les personnes<br><span class="accent">en un clic</span></h2>
+                            <p class="welcome-subtitle">Analysez vos images avec l'intelligence artificielle Google Gemini. Rapide, précis et fiable.</p>
+                        </div>
+
+                        <!-- Boutons d'action principaux -->
+                        <div class="action-grid">
+                            <div class="action-card upload-card">
+                                <div class="card-icon upload-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                </div>
+                                <h3>Importer une photo</h3>
+                                <p>Sélectionnez une image depuis votre appareil</p>
+                                <input type="file" id="file-input" accept="image/*" class="hidden-input">
+                            </div>
+
+                            <div class="action-card camera-card">
+                                <div class="card-icon camera-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                        <circle cx="12" cy="13" r="4"></circle>
+                                    </svg>
+                                </div>
+                                <h3>Prendre une photo</h3>
+                                <p>Utilisez votre caméra en direct</p>
+                                <button id="camera-btn" class="hidden-btn">Activer caméra</button>
+                            </div>
+                        </div>
+
+                        <!-- Guide rapide -->
+                        <div class="quick-guide">
+                            <h4>Comment ça marche ?</h4>
+                            <ol class="guide-steps">
+                                <li><strong>Chargez</strong> une image (photo, screenshot, etc.)</li>
+                                <li><strong>Vérifiez</strong> l'aperçu avant analyse</li>
+                                <li><strong>Analysez</strong> en un clic</li>
+                                <li><strong>Consultez</strong> les résultats détaillés</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- État CAMERA -->
+                <section id="camera-state" class="state-section">
+                    <div class="camera-container">
+                        <div class="camera-frame">
+                            <video id="video-feed" autoplay playsinline muted></video>
+                            <canvas id="canvas"></canvas>
+                            
+                            <!-- Overlay info -->
+                            <div class="camera-overlay">
+                                <div class="camera-guide">
+                                    <p>Cadrez les personnes à analyser</p>
+                                </div>
+                                <button id="close-camera" class="btn-icon btn-close">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Contrôles -->
+                        <div class="camera-controls">
+                            <button id="capture-btn" class="btn btn-primary btn-large">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="12" r="8"></circle>
+                                </svg>
+                                Capturer
+                            </button>
+                            <button id="retake-btn" class="btn btn-secondary">Recommencer</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- État PREVIEW -->
+                <section id="preview-state" class="state-section">
+                    <div class="preview-container">
+                        <div class="preview-header">
+                            <h3>Vérification de l'image</h3>
+                            <button id="back-preview-btn" class="btn-text">Changer l'image</button>
+                        </div>
+
+                        <div class="preview-image-wrapper">
+                            <img id="preview-image" src="" alt="Aperçu de l'image" class="preview-image">
+                        </div>
+
+                        <!-- Informations sur l'image -->
+                        <div class="image-info">
+                            <div class="info-item">
+                                <span class="info-label">Dimension</span>
+                                <span class="info-value" id="image-size">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Taille</span>
+                                <span class="info-value" id="image-bytes">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="preview-actions">
+                            <button id="analyze-btn" class="btn btn-primary btn-large">
+                                Analyser maintenant
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12l7 7-7 7"></path>
+                                    <path d="M2 12l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- État ANALYZING -->
+                <section id="analyzing-state" class="state-section">
+                    <div class="loading-container">
+                        <div class="spinner-ring">
+                            <div class="spinner-circle"></div>
+                        </div>
+                        <h3>Analyse en cours...</h3>
+                        <p>L'IA examine votre image pour compter les personnes</p>
+                        <div class="progress-info">
+                            <span>Veuillez patienter</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- État RESULT -->
+                <section id="result-state" class="state-section">
+                    <div class="result-container">
+                        <!-- Résultat principal -->
+                        <div class="result-card result-main">
+                            <div class="result-icon success-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                                </svg>
+                            </div>
+                            <div class="result-count-display">
+                                <span class="count-number" id="result-count">0</span>
+                                <span class="count-label">personne(s) détectée(s)</span>
+                            </div>
+                        </div>
+
+                        <!-- Grille de détails -->
+                        <div class="results-grid">
+                            <!-- Description -->
+                            <div class="result-card result-detail">
+                                <h4 class="detail-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Description
+                                </h4>
+                                <p class="detail-content" id="result-description">-</p>
+                            </div>
+
+                            <!-- Confiance -->
+                            <div class="result-card result-detail">
+                                <h4 class="detail-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Niveau de confiance
+                                </h4>
+                                <div class="confidence-display">
+                                    <span class="confidence-badge" id="result-confidence">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="result-actions">
+                            <button id="export-btn" class="btn btn-secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Télécharger le rapport
+                            </button>
+                            <button id="reset-btn" class="btn btn-primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 4 23 10 17 10"></polyline>
+                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                </svg>
+                                Nouvelle analyse
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- État ERROR -->
+                <section id="error-state" class="state-section">
+                    <div class="error-container">
+                        <div class="error-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
+                            </svg>
+                        </div>
+                        <h3>Une erreur s'est produite</h3>
+                        <p id="error-message" class="error-text">-</p>
+                        <div class="error-actions">
+                            <button id="error-retry-btn" class="btn btn-primary">Réessayer</button>
+                            <button id="error-home-btn" class="btn btn-secondary">Retour à l'accueil</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+
+        <!-- Sidebar Aide -->
+        <aside id="help-sidebar" class="help-sidebar">
+            <div class="sidebar-header">
+                <h2>Aide</h2>
+                <button id="help-close" class="btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="help-content">
+                <div class="help-section">
+                    <h3>Conseils pour de meilleurs résultats</h3>
+                    <ul class="help-list">
+                        <li>Assurez-vous que la lumière est suffisante</li>
+                        <li>Cadrez les personnes complètement ou partiellement visibles</li>
+                        <li>Évitez les images trop petites ou floues</li>
+                        <li>Les images de groupe sont plus précises</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>Limitations</h3>
+                    <ul class="help-list">
+                        <li>Ne compte que les personnes, pas les objets</li>
+                        <li>Peut avoir du mal avec les foules très denses</li>
+                        <li>Affecté par l'occlusion (personnes cachées)</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>À propos</h3>
+                    <p class="help-text">CountAI utilise l'intelligence artificielle Google Gemini pour analyser vos images avec précision.</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
