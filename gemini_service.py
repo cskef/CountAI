@@ -1,64 +1,61 @@
 """
-Service pour analyser les images avec Google Gemini API.
-Compte le nombre de personnes présentes dans une image.
+Service pour analyser les images avec MediaPipe (Google).
 """
 
-import json
+import mediapipe as mp
+import numpy as np
+import cv2
 import base64
-import os
-from dotenv import load_dotenv
-from google import genai
 
-load_dotenv()
 
-# Initialiser le client Gemini
-client = genai.Client(api_key=os.getenv('API_KEY'))
-
+# model_selection=1 est optimisé pour les personnes éloignées (0 pour les selfies proches)
+# min_detection_confidence=0.5 est le seuil de certitude
+mp_face_detection = mp.solutions.face_detection
+face_detection = mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.5)
 
 def count_people_in_image(base64_data: str, mime_type: str) -> dict:
-
     try:
-        # Préparer le texte du prompt
-        prompt_text = """Analyse cette image et compte le nombre d'êtres humains visibles. 
-Ne compte pas les dessins animés, les statues ou les reflets si possible.
-Sois précis.
+        # 1. Décoder l'image Base64
+        image_bytes = base64.b64decode(base64_data)
+        np_arr = np.frombuffer(image_bytes, np.uint8)
+        image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
-Réponds UNIQUEMENT au format JSON avec ces champs:
-{
-    "count": <nombre entier>,
-    "description": "<brève description de la scène en français, max 2 phrases>",
-    "confidenceLevel": "<Élevé|Moyen|Faible>"
-}"""
+        if image is None:
+            raise ValueError("Impossible de décoder l'image.")
 
-        # Créer la requête avec l'image en base64
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=[
-                {
-                    "role": "user",
-                    "parts": [
-                        {
-                            "inline_data": {
-                                "mime_type": mime_type,
-                                "data": base64_data,
-                            }
-                        },
-                        {
-                            "text": prompt_text
-                        }
-                    ]
-                }
-            ],
-        )
+        # 2. Conversion BGR (OpenCV) vers RGB (MediaPipe)
+        # MediaPipe a besoin d'images RGB pour bien fonctionner
+        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        if response.text:
-            # Extraire le JSON de la réponse
-            result = json.loads(response.text)
-            return result
-        else:
-            raise ValueError("Aucune réponse textuelle reçue de l'IA.")
+        # 3. Inférence (Détection)
+        results = face_detection.process(image_rgb)
 
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Erreur lors du parsing de la réponse JSON de l'IA: {str(e)}")
+        # 4. Comptage
+        count = 0
+        confidence_scores = []
+
+        if results.detections:
+            count = len(results.detections)
+            for detection in results.detections:
+                confidence_scores.append(detection.score[0])
+
+        # Calcul de la confiance moyenne
+        avg_conf = (sum(confidence_scores) / count) if count > 0 else 0
+        
+        # Niveau de confiance textuel
+        conf_level = "Faible"
+        if avg_conf > 0.85:
+            conf_level = "Élevé"
+        elif avg_conf > 0.6:
+            conf_level = "Moyen"
+
+        return {
+            "count": count,
+            "description": f"Analyse locale (MediaPipe) : {count} personne(s) détectée(s).",
+            "confidenceLevel": conf_level
+        }
+
     except Exception as error:
-        raise RuntimeError(f"Impossible d'analyser l'image: {str(error)}")
+        # En production, log l'erreur réelle ici
+        print(f"Erreur MediaPipe: {error}")
+        raise RuntimeError(f"Erreur lors de l'analyse d'image")
