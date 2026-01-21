@@ -5,6 +5,8 @@ echo.
 echo ========================================
 echo   CountAI - Comptage par Intelligence Artificielle
 echo ========================================
+echo   KENNE KEYANYEM FRANK & TAMBA MBE YOHAN
+echo ========================================
 echo.
 
 REM Vérifier si Python est installé
@@ -28,13 +30,6 @@ REM Installer les dépendances
 echo Installation des dépendances...
 pip install -r requirements.txt
 
-REM Vérifier si .env existe
-if not exist ".env" (
-    echo.
-    echo IMPORTANT: Créez un fichier .env avec votre clé API Gemini
-    echo Utilisez .env.example comme modèle
-    echo.
-)
 
 REM Lancer l'application
 echo.
