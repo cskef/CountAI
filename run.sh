@@ -6,6 +6,8 @@ echo ""
 echo "========================================"
 echo "  CountAI - Comptage par Intelligence Artificielle"
 echo "========================================"
+echo "  KENNE KEYANYEM FRANK & TAMBA MBE YOHAN"
+echo "========================================"
 echo ""
 
 # Vérifier si Python est installé
@@ -26,14 +28,6 @@ source venv/bin/activate
 # Installer les dépendances
 echo "Installation des dépendances..."
 pip install -r requirements.txt
-
-# Vérifier si .env existe
-if [ ! -f ".env" ]; then
-    echo ""
-    echo "IMPORTANT: Créez un fichier .env avec votre clé API Gemini"
-    echo "Utilisez .env.example comme modèle"
-    echo ""
-fi
 
 # Lancer l'application
 echo ""
