@@ -1,6 +1,4 @@
-flask==3.0.0
-python-dotenv==1.0.0
-Pillow==10.4.0
-mediapipe==0.10.31
-numpy==2.4.1
-opencv-python-headless==4.13.0.90
+flask
+python-dotenv
+Pillow
+ultralytics

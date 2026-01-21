@@ -1,61 +1,52 @@
 """
-Service pour analyser les images avec MediaPipe (Google).
+Service d'analyse d'image utilisant YOLOv8.
+Détecte les PERSONNES (corps entiers) au lieu des visages.
+Plus robuste pour le théâtre (acteurs de dos, masques, etc).
 """
 
-import mediapipe as mp
-import numpy as np
-import cv2
+import io
 import base64
+from PIL import Image
+from ultralytics import YOLO
 
-
-# model_selection=1 est optimisé pour les personnes éloignées (0 pour les selfies proches)
-# min_detection_confidence=0.5 est le seuil de certitude
-mp_face_detection = mp.solutions.face_detection
-face_detection = mp_face_detection.FaceDetection(model_selection=1, min_detection_confidence=0.5)
+# Chargement automatique du modèle "Nano" (le plus léger et rapide)
+# Au premier lancement, il va télécharger 'yolov8n.pt' (environ 6 Mo) tout seul.
+print("Chargement du modèle YOLOv8...")
+model = YOLO('yolov8n.pt')
+print("✅ Modèle chargé.")
 
 def count_people_in_image(base64_data: str, mime_type: str) -> dict:
     try:
-        # 1. Décoder l'image Base64
+        # 1. Décoder l'image Base64 (Utilisation de Pillow, pas d'OpenCV)
         image_bytes = base64.b64decode(base64_data)
-        np_arr = np.frombuffer(image_bytes, np.uint8)
-        image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        image = Image.open(io.BytesIO(image_bytes))
 
-        if image is None:
-            raise ValueError("Impossible de décoder l'image.")
+        # 2. Inférence (Détection)
+        # classes=[0] signifie qu'on ne cherche que la classe "Personne"
+        # conf=0.4 est le seuil de confiance (40%)
+        results = model.predict(image, classes=[0], conf=0.4, verbose=False)
 
-        # 2. Conversion BGR (OpenCV) vers RGB (MediaPipe)
-        # MediaPipe a besoin d'images RGB pour bien fonctionner
-        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-        # 3. Inférence (Détection)
-        results = face_detection.process(image_rgb)
-
-        # 4. Comptage
-        count = 0
-        confidence_scores = []
-
-        if results.detections:
-            count = len(results.detections)
-            for detection in results.detections:
-                confidence_scores.append(detection.score[0])
-
-        # Calcul de la confiance moyenne
-        avg_conf = (sum(confidence_scores) / count) if count > 0 else 0
+        # 3. Comptage
+        # results[0] contient le premier (et unique) résultat de l'image
+        count = len(results[0].boxes)
         
+        # Calcul de la confiance moyenne (optionnel)
+        conf_scores = results[0].boxes.conf.tolist() # Récupère les scores
+        avg_conf = (sum(conf_scores) / count) if count > 0 else 0
+
         # Niveau de confiance textuel
         conf_level = "Faible"
-        if avg_conf > 0.85:
+        if avg_conf > 0.8:
             conf_level = "Élevé"
         elif avg_conf > 0.6:
             conf_level = "Moyen"
 
         return {
             "count": count,
-            "description": f"Analyse locale (MediaPipe) : {count} personne(s) détectée(s).",
+            "description": f"Détection YOLOv8 : {count} personne(s) détectée(s).",
             "confidenceLevel": conf_level
         }
 
     except Exception as error:
-        # En production, log l'erreur réelle ici
-        print(f"Erreur MediaPipe: {error}")
-        raise RuntimeError(f"Erreur lors de l'analyse d'image")
+        print(f"Erreur YOLO: {error}")
+        raise RuntimeError(f"Impossible de traiter l'image : {str(error)}")
