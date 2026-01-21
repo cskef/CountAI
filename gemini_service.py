@@ -1,7 +1,5 @@
 """
 Service d'analyse d'image utilisant YOLOv8.
-Détecte les PERSONNES (corps entiers) au lieu des visages.
-Plus robuste pour le théâtre (acteurs de dos, masques, etc).
 """
 
 import io
@@ -9,8 +7,7 @@ import base64
 from PIL import Image
 from ultralytics import YOLO
 
-# Chargement automatique du modèle "Nano" (le plus léger et rapide)
-# Au premier lancement, il va télécharger 'yolov8n.pt' (environ 6 Mo) tout seul.
+
 print("Chargement du modèle YOLOv8...")
 model = YOLO('yolov8n.pt')
 print("✅ Modèle chargé.")
@@ -43,7 +40,7 @@ def count_people_in_image(base64_data: str, mime_type: str) -> dict:
 
         return {
             "count": count,
-            "description": f"Détection YOLOv8 : {count} personne(s) détectée(s).",
+            "description": f"Détection : {count} personne(s) détectée(s).",
             "confidenceLevel": conf_level
         }
 
