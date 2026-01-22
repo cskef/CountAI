@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Beta-orange)]()
 
-*Comptez les personnes en photos instantanément avec une IA locale - Rapide • Privé • Sans API externe*
+*Comptez les personnes en photos instantanément avec une IA locale - Rapide • Privé*
 
 </div>
 
@@ -32,7 +32,7 @@
 
 ## ✨ Caractéristiques
 
-CountAI est une application web de comptage de personnes qui a évolué pour utiliser un modèle de Deep Learning local (YOLOv8), garantissant confidentialité et performance sans dépendance à une API externe.
+CountAI est une application web de comptage de personnes utilisant un modèle de Deep Learning local, garantissant confidentialité et performance sans dépendance à une API externe.
 
 ### Fonctionnalités Principales
 
@@ -40,7 +40,7 @@ CountAI est une application web de comptage de personnes qui a évolué pour uti
 |---|---|
 | 📤 **Import d'images** | Chargez vos photos (JPG, PNG, WEBP) |
 | 📷 **Capture caméra** | Flux vidéo en direct pour capture instantanée |
-| 🧠 **IA Locale** | Détection via **YOLOv8 Nano**, exécution 100% offline |
+| 🧠 **IA Locale** | Détection via **YOLOv8 Nano** |
 | ⚡ **Temps Réel** | Inférence rapide (CPU/GPU) sans latence réseau |
 | 📊 **Résultats** | Comptage précis et niveau de confiance algorithmique |
 | 🛡️ **Confidentialité** | Aucune image n'est envoyée sur le cloud |
@@ -71,7 +71,7 @@ chmod +x run.sh
 
 ```
 
-*Le script se chargera d'installer les dépendances et de télécharger le modèle `yolov8n.pt` au premier lancement.*
+*Le script se chargera d'installer les dépendances et de télécharger le modèle `yolov8n.pt` au premier lancement s'il n'existe pas encore.*
 
 #### 3️⃣ Accéder à l'application
 
@@ -99,7 +99,7 @@ http://localhost:5000
 #### Étape 1: Cloner le projet
 
 ```bash
-git clone [https://github.com/votre-username/countai.git](https://github.com/votre-username/countai.git)
+git clone [https://github.com/cskef/countai.git](https://github.com/cskef/countai.git)
 cd countai
 
 ```
@@ -154,7 +154,7 @@ python app.py
 
 ## 🏗️ Architecture
 
-Transition d'une architecture Cloud (Gemini) vers une architecture Edge (Locale).
+Voici l'architecture...
 
 ### Stack Technologique
 
@@ -185,8 +185,8 @@ HTML5 / CSS3 / Vanilla JS
 countai/
 ├── 📄 app.py                 # Point d'entrée Flask
 ├── 📄 service.py             # Logique d'inférence YOLOv8
-├── 📄 requirements.txt       # Dépendances (flask, ultralytics, pillow...)
-├── 📄 yolov8n.pt             # Modèle IA (téléchargé auto)
+├── 📄 requirements.txt       # Dépendances
+├── 📄 yolov8n.pt             # Modèle IA
 ├── 📁 templates/
 │   └── index.html            # Interface utilisateur
 ├── 📁 static/
