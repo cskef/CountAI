@@ -169,18 +169,25 @@ function updateHistoryDisplay() {
     }
     
     elements.historyList.innerHTML = analysisHistory
+        .map((item, index) => { // Note: on map d'abord, on reverse après via CSS ou logique d'affichage, ou ici on garde l'ordre inverse des index
+            // Calcul de l'index inversé pour l'affichage correct
+             return { item, originalIndex: index };
+        })
         .reverse()
-        .map((item, index) => `
-            <div class="history-item" data-index="${analysisHistory.length - 1 - index}">
-                <div class="history-item-count">${item.count}</div>
-                <div class="history-item-time">${new Date(item.timestamp).toLocaleTimeString('fr-FR')}</div>
+        .map(({ item, originalIndex }) => `
+            <div class="history-item" data-index="${originalIndex}">
+                <img src="${item.thumbnail || ''}" class="history-thumb" alt="Miniature">
+                <div class="history-info">
+                    <div class="history-item-count">${item.count} pers.</div>
+                    <div class="history-item-time">${new Date(item.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</div>
+                </div>
             </div>
         `)
         .join('');
     
-    document.querySelectorAll('.history-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const index = parseInt(item.dataset.index);
+    document.querySelectorAll('.history-item').forEach(el => {
+        el.addEventListener('click', () => {
+            const index = parseInt(el.dataset.index);
             restoreFromHistory(index);
         });
     });
@@ -345,10 +352,20 @@ function displayResult(result) {
 }
 
 function addToHistory(result) {
+    // Création de l'URL de l'image miniature
+    let thumbUrl = null;
+    
+    // Si on a une image en mémoire
+    if (imageFile && imageFile.data) {
+        thumbUrl = `data:${imageFile.mimeType};base64,${imageFile.data}`;
+    }
+
     analysisHistory.push({
         count: result.count,
         description: result.description,
         confidenceLevel: result.confidenceLevel,
+        // Sauvegarde de l'image
+        thumbnail: thumbUrl,
         timestamp: new Date().toISOString()
     });
     updateHistoryDisplay();
@@ -371,7 +388,6 @@ Nombre de personnes: ${elements.resultCount.textContent}
 Description: ${elements.resultDescription.textContent}
 Confiance: ${elements.resultConfidence.textContent}
 
-Généré par CountAI - Intelligence Artificielle Google Gemini
     `;
     
     const blob = new Blob([report], { type: 'text/plain' });

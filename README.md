@@ -1,17 +1,16 @@
-<!-- Header -->
 <div align="center">
 
 # 🤖 CountAI
 
-### Analyse Intelligente de Foule par Vision Artificielle
+### Analyse Intelligente de Foule par Vision Locale (YOLOv8)
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.0-green?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
-[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-API-red?logo=google&logoColor=white)](https://ai.google.dev)
+[![YOLOv8](https://img.shields.io/badge/AI-YOLOv8-purple?logo=pytorch&logoColor=white)](https://github.com/ultralytics/ultralytics)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)]()
+[![Status](https://img.shields.io/badge/Status-Beta-orange)]()
 
-*Comptez les personnes en photos avec l'intelligence artificielle - Rapide • Précis • Fiable*
+*Comptez les personnes en photos instantanément avec une IA locale - Rapide • Privé • Sans API externe*
 
 </div>
 
@@ -26,8 +25,6 @@
 - [📖 Utilisation](#-utilisation)
 - [⚙️ Configuration](#️-configuration)
 - [🔧 API & Technique](#-api--technique)
-- [🛡️ Sécurité](#️-sécurité)
-- [❓ Troubleshooting](#-troubleshooting)
 - [📚 Ressources](#-ressources)
 - [📄 Licence](#-licence)
 
@@ -35,60 +32,54 @@
 
 ## ✨ Caractéristiques
 
-CountAI est une application web moderne de comptage de personnes qui combine la puissance de l'intelligence artificielle avec une interface intuitive et responsive.
+CountAI est une application web de comptage de personnes qui a évolué pour utiliser un modèle de Deep Learning local (YOLOv8), garantissant confidentialité et performance sans dépendance à une API externe.
 
 ### Fonctionnalités Principales
 
 | Fonctionnalité | Description |
 |---|---|
-| 📤 **Import d'images** | Chargez vos photos depuis votre ordinateur |
-| 📷 **Capture caméra** | Prenez des photos en direct avec votre webcam |
-| 🎯 **Analyse IA** | Détection automatique de personnes avec Google Gemini |
-| 📊 **Résultats détaillés** | Comptage, description et niveau de confiance |
-| 💾 **Historique** | Accès rapide à vos analyses précédentes |
-| 📱 **Interface Responsive** | Adapté pour desktop, tablette et mobile |
-| ⚡ **Performance** | Analyse en temps réel sans dépendances externes |
+| 📤 **Import d'images** | Chargez vos photos (JPG, PNG, WEBP) |
+| 📷 **Capture caméra** | Flux vidéo en direct pour capture instantanée |
+| 🧠 **IA Locale** | Détection via **YOLOv8 Nano**, exécution 100% offline |
+| ⚡ **Temps Réel** | Inférence rapide (CPU/GPU) sans latence réseau |
+| 📊 **Résultats** | Comptage précis et niveau de confiance algorithmique |
+| 🛡️ **Confidentialité** | Aucune image n'est envoyée sur le cloud |
+| 📱 **Responsive** | Interface adaptative mobile et desktop |
 
 ---
 
 ## 🚀 Démarrage Rapide
 
-### ⏱️ Installation en 5 minutes
+### ⏱️ Installation en 2 minutes
 
-#### 1️⃣ Obtenir une clé API Gemini (gratuit)
+#### 1️⃣ Préparer l'environnement
+Assurez-vous d'avoir Python 3.8+ installé sur votre machine.
 
-```bash
-1. Allez sur https://ai.google.dev
-2. Cliquez sur "Get started"
-3. Créez un nouveau projet
-4. Générez une clé API
-5. Copiez-la
-```
-
-#### 2️⃣ Configuration Automatique
+#### 2️⃣ Lancement Automatique
 
 **Windows:**
 ```bash
 run.bat
+
 ```
 
 **macOS/Linux:**
+
 ```bash
 chmod +x run.sh
 ./run.sh
+
 ```
 
-#### 3️⃣ Configurer l'API
+*Le script se chargera d'installer les dépendances et de télécharger le modèle `yolov8n.pt` au premier lancement.*
 
-Ouvrez `.env` et remplacez:
-```env
-API_KEY=votre_clé_gemini_ici
-```
+#### 3️⃣ Accéder à l'application
 
-#### 4️⃣ Accéder à l'application
+Ouvrez votre navigateur :
 
 ```
 http://localhost:5000
+
 ```
 
 ---
@@ -97,69 +88,65 @@ http://localhost:5000
 
 ### Prérequis
 
-- **Python 3.8+** - [Télécharger](https://www.python.org/)
-- **Clé API Google Gemini** (gratuite) - [Créer une clé](https://ai.google.dev)
+* **Python 3.8+** - [Télécharger](https://www.python.org/)
+* **RAM** : Min 4GB recommandé pour l'inférence fluide.
 
-### Étapes Installation
+### Étapes Manuelles
 
 <details>
-<summary><b>📋 Voir les étapes complètes</b></summary>
+<summary><b>📋 Voir les étapes détaillées</b></summary>
 
-#### Étape 1: Cloner/Télécharger le projet
+#### Étape 1: Cloner le projet
 
 ```bash
-git clone https://github.com/yourusername/countai.git
+git clone [https://github.com/votre-username/countai.git](https://github.com/votre-username/countai.git)
 cd countai
+
 ```
 
-#### Étape 2: Créer un environnement virtuel
+#### Étape 2: Environnement virtuel
 
 ```bash
 python -m venv venv
-```
 
-#### Étape 3: Activer l'environnement
-
-**Windows:**
-```bash
+# Windows
 venv\Scripts\activate
-```
 
-**macOS/Linux:**
-```bash
+# macOS/Linux
 source venv/bin/activate
+
 ```
 
-#### Étape 4: Installer les dépendances
+#### Étape 3: Installer les dépendances
+
+Le projet utilise désormais `ultralytics` pour la vision par ordinateur.
 
 ```bash
 pip install -r requirements.txt
+
 ```
 
-#### Étape 5: Configurer l'API
+#### Étape 4: Configuration
 
 ```bash
-# Créer le fichier .env depuis l'exemple
+# Copier le fichier d'exemple
 cp .env.example .env
 
 # Ou sur Windows:
 copy .env.example .env
+
 ```
 
-Éditez `.env` et ajoutez votre clé API:
-```env
-API_KEY=votre_clé_gemini_ici
-FLASK_ENV=development
-FLASK_DEBUG=1
-```
+*Note : Aucune clé API n'est requise. Le `.env` sert uniquement à la configuration Flask.*
 
-#### Étape 6: Lancer l'application
+#### Étape 5: Lancer le serveur
 
 ```bash
 python app.py
+
 ```
 
-Accédez à: **http://localhost:5000** ✅
+*Le modèle YOLOv8n (environ 6MB) sera téléchargé automatiquement lors de la première analyse s'il n'est pas présent.*
 
 </details>
 
@@ -167,121 +154,132 @@ Accédez à: **http://localhost:5000** ✅
 
 ## 🏗️ Architecture
 
+Transition d'une architecture Cloud (Gemini) vers une architecture Edge (Locale).
+
 ### Stack Technologique
 
 #### Backend
+
 ```
 Python 3.8+
   ↓
-Flask 3.0 (Web Framework)
+Flask 3.0 (Serveur Web)
   ↓
-Google Gemini API (Vision IA)
+Ultralytics YOLOv8 (Moteur d'inférence local)
+  ↓
+Modèle: yolov8n.pt (Détection d'objets)
+
 ```
 
 #### Frontend
+
 ```
-HTML5 (Structure)
-  ↓
-CSS3 Vanilla (Design System)
-  ↓
-JavaScript Vanilla (State Management)
+HTML5 / CSS3 / Vanilla JS
+(Gestion de la caméra et affichage asynchrone)
+
 ```
 
-### Structure du Projet
+### Structure des Fichiers
 
 ```
 countai/
-├── 📄 app.py                 # Application Flask principale
-├── 📄 gemini_service.py      # Service d'analyse Gemini
-├── 📄 requirements.txt       # Dépendances Python
-├── 📄 .env.example           # Configuration exemple
+├── 📄 app.py                 # Point d'entrée Flask
+├── 📄 service.py             # Logique d'inférence YOLOv8
+├── 📄 requirements.txt       # Dépendances (flask, ultralytics, pillow...)
+├── 📄 yolov8n.pt             # Modèle IA (téléchargé auto)
 ├── 📁 templates/
-│   └── index.html            # Interface web
+│   └── index.html            # Interface utilisateur
 ├── 📁 static/
-│   ├── style.css             # Design system CSS
-│   └── script.js             # Logique JavaScript
-└── 📄 README.md              # Cette documentation
+│   ├── style.css             # Styles
+│   └── script.js             # Logique client
+└── 📄 README.md              # Documentation
+
 ```
 
-### Dépendances Python
+### Dépendances Python Clés
 
-| Package | Version | Rôle |
-|---------|---------|------|
-| Flask | 3.0.0 | Framework web léger |
-| python-dotenv | 1.0.0 | Configuration sécurisée |
-| google-genai | 0.3.0 | Client Gemini IA |
-| Pillow | 10.1.0 | Traitement d'images |
+| Package | Usage |
+| --- | --- |
+| `flask` | Serveur web et API REST |
+| `ultralytics` | Implémentation de YOLOv8 |
+| `pillow` | Manipulation d'images avant inférence |
 
 ---
 
 ## 📖 Utilisation
 
-### Flux Utilisateur
+1. **Lancer l'app** : `python app.py`
+2. **Interface** :
+* Cliquez sur **Importer** pour uploader un fichier.
+* Ou **Caméra** pour prendre une photo via la webcam.
 
-```
-1. 📤 IMPORT/CAPTURE
-   ├─ Importer une photo (fichier)
-   └─ Prendre une photo (caméra)
 
-2. 👁️ APERÇU
-   ├─ Visualiser l'image
-   └─ Vérifier dimensions/taille
+3. **Analyse** :
+* Le backend charge l'image en mémoire.
+* YOLOv8 détecte les objets de classe `0` (Personnes).
+* L'image n'est **jamais stockée** sur le disque (traitement en flux).
 
-3. 🔄 ANALYSE
-   ├─ Envoyer à Gemini API
-   └─ Recevoir résultats JSON
 
-4. 📊 RÉSULTATS
-   ├─ Nombre de personnes
-   ├─ Description de scène
-   └─ Niveau de confiance
-
-5. 💾 HISTORIQUE
-   └─ Accès aux analyses précédentes
-```
-
-### Fonctionnalités Détaillées
-
-#### 📤 Import d'Images
-- Sélectionnez une image depuis votre ordinateur
-- Format: JPG, PNG, GIF, WEBP
-- Limite: 16MB maximum
-
-#### 📷 Capture Caméra
-- Accès à votre webcam en temps réel
-- Résolution: jusqu'à 1920x1080
-- Permissions nécessaires: autorisées par le navigateur
-
-#### 🎯 Analyse Intelligente
-- Détection des personnes via Gemini Vision
-- Description textuelle de la scène
-- Score de confiance (0-100%)
-
-#### 💾 Historique
-- Stockage local des analyses
-- Accès rapide aux résultats précédents
-- Export en TXT/PDF
+4. **Résultat** : Affichage immédiat du nombre de personnes.
 
 ---
 
 ## ⚙️ Configuration
 
-### Variables d'Environnement
+Le fichier `.env` contrôle les paramètres du serveur Flask.
 
 ```env
-API_KEY=votre_clé_api_gemini_ici     # Obligatoire
-FLASK_ENV=development                 # development/production
-FLASK_DEBUG=1                         # 0/1 (mode debug)
+# Configuration Serveur
+FLASK_ENV=development      # development / production
+FLASK_DEBUG=1              # 1 pour activer le rechargement auto
+MAX_CONTENT_LENGTH=16777216 # Taille max upload (16MB)
+
 ```
 
-### Configuration Avancée
-
-#### Pour Production
-
-```env
-API_KEY=votre_clé_production_ici
-FLASK_ENV=production
-FLASK_DEBUG=0
-```
+---
 
 ## 🔧 API & Technique
+
+### Endpoint `/api/analyze`
+
+**Méthode** : `POST`
+
+**Content-Type** : `application/json`
+
+**Corps de la requête :**
+
+```json
+{
+  "data": "base64_encoded_image_string...",
+  "mimeType": "image/jpeg"
+}
+
+```
+
+**Réponse (200 OK) :**
+
+```json
+{
+  "count": 12,
+  "description": "Détection : 12 personne(s) détectée(s).",
+  "confidenceLevel": "Élevé"
+}
+
+```
+
+---
+
+## 📚 Ressources
+
+* [Ultralytics YOLOv8 Docs](https://docs.ultralytics.com/)
+* [Flask Documentation](https://flask.palletsprojects.com/)
+
+---
+
+## 📄 Licence
+
+Distribué sous la licence MIT. Voir `LICENSE` pour plus d'informations.
+
+```
+
+```

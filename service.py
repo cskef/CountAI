@@ -10,7 +10,7 @@ from ultralytics import YOLO
 
 print("Chargement du modèle YOLOv8...")
 model = YOLO('yolov8n.pt')
-print("✅ Modèle chargé.")
+print("Modèle chargé.")
 
 def count_people_in_image(base64_data: str, mime_type: str) -> dict:
     try:

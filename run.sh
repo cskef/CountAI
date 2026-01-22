@@ -6,7 +6,7 @@ echo ""
 echo "========================================"
 echo "  CountAI - Comptage par Intelligence Artificielle"
 echo "========================================"
-echo "  KENNE KEYANYEM FRANK & TAMBA MBE YOHAN"
+echo "  KENNE KEYANYEM FRANK et TAMBA MBE YOHAN"
 echo "========================================"
 echo ""
 
