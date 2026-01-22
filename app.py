@@ -8,7 +8,7 @@ import base64
 import json
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
-from gemini_service import count_people_in_image
+from service import count_people_in_image
 
 load_dotenv()
 
