@@ -16,21 +16,21 @@
 
 ---
 
-## 📋 Table des Matières
+## Table des Matières
 
-- [✨ Caractéristiques](#-caractéristiques)
-- [🚀 Démarrage Rapide](#-démarrage-rapide)
-- [📦 Installation Complète](#-installation-complète)
-- [🏗️ Architecture](#️-architecture)
-- [📖 Utilisation](#-utilisation)
-- [⚙️ Configuration](#️-configuration)
-- [🔧 API & Technique](#-api--technique)
-- [📚 Ressources](#-ressources)
-- [📄 Licence](#-licence)
+- [ Caractéristiques](#-caractéristiques)
+- [Démarrage Rapide](#-démarrage-rapide)
+- [Installation Complète](#-installation-complète)
+- [Architecture](#️-architecture)
+- [Utilisation](#-utilisation)
+- [Configuration](#️-configuration)
+- [API & Technique](#-api--technique)
+- [Ressources](#-ressources)
+- [Licence](#-licence)
 
 ---
 
-## ✨ Caractéristiques
+## Caractéristiques
 
 CountAI est une application web de comptage de personnes utilisant un modèle de Deep Learning local, garantissant confidentialité et performance sans dépendance à une API externe.
 
@@ -38,19 +38,19 @@ CountAI est une application web de comptage de personnes utilisant un modèle de
 
 | Fonctionnalité | Description |
 |---|---|
-| 📤 **Import d'images** | Chargez vos photos (JPG, PNG, WEBP) |
-| 📷 **Capture caméra** | Flux vidéo en direct pour capture instantanée |
-| 🧠 **IA Locale** | Détection via **YOLOv8 Nano** |
-| ⚡ **Temps Réel** | Inférence rapide (CPU/GPU) sans latence réseau |
-| 📊 **Résultats** | Comptage précis et niveau de confiance algorithmique |
-| 🛡️ **Confidentialité** | Aucune image n'est envoyée sur le cloud |
-| 📱 **Responsive** | Interface adaptative mobile et desktop |
+| **Import d'images** | Chargez vos photos (JPG, PNG, WEBP) |
+| **Capture caméra** | Flux vidéo en direct pour capture instantanée |
+| **IA Locale** | Détection via **YOLOv8 Nano** |
+| **Temps Réel** | Inférence rapide (CPU/GPU) sans latence réseau |
+| **Résultats** | Comptage précis et niveau de confiance algorithmique |
+| **Confidentialité** | Aucune image n'est envoyée sur le cloud |
+| **Responsive** | Interface adaptative mobile et desktop |
 
 ---
 
-## 🚀 Démarrage Rapide
+## Démarrage Rapide
 
-### ⏱️ Installation en 2 minutes
+### Installation en 2 minutes
 
 #### 1️⃣ Préparer l'environnement
 Assurez-vous d'avoir Python 3.8+ installé sur votre machine.
@@ -84,7 +84,7 @@ http://localhost:5000
 
 ---
 
-## 📦 Installation Complète
+## Installation Complète
 
 ### Prérequis
 
@@ -152,7 +152,7 @@ python app.py
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 Voici l'architecture...
 
@@ -206,7 +206,7 @@ countai/
 
 ---
 
-## 📖 Utilisation
+## Utilisation
 
 1. **Lancer l'app** : `python app.py`
 2. **Interface** :
@@ -224,7 +224,7 @@ countai/
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Le fichier `.env` contrôle les paramètres du serveur Flask.
 
@@ -238,7 +238,7 @@ MAX_CONTENT_LENGTH=16777216 # Taille max upload (16MB)
 
 ---
 
-## 🔧 API & Technique
+## API & Technique
 
 ### Endpoint `/api/analyze`
 
@@ -269,7 +269,7 @@ MAX_CONTENT_LENGTH=16777216 # Taille max upload (16MB)
 
 ---
 
-## 📚 Ressources
+## Ressources
 
 * [Ultralytics YOLOv8 Docs](https://docs.ultralytics.com/)
 * [Flask Documentation](https://flask.palletsprojects.com/)
